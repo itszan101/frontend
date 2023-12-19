@@ -1,0 +1,4 @@
+- cp .env.example .env
+- composer install / composer install --ignore-platform-reqs
+- php artisan key:generate
+- php artisan optimize
