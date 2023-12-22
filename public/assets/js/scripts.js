@@ -100,7 +100,7 @@ $(function() {
           return false;
         });
 
-        $('.main-sidebar .sidebar-menu li.active').removeClass('active');
+        $('.main-sidebar .sidebar-menu li.active.dropdown').removeClass('active');
 
         if(active==true) {
           me.parent().removeClass('active');
@@ -329,7 +329,8 @@ $(function() {
 
   // Select2
   if(jQuery().select2) {
-    $(".select2").select2();
+    const select2Opts = $(".select2").data('select2-opts')
+    $(".select2").select2(select2Opts || {});
   }
 
   // Selectric
