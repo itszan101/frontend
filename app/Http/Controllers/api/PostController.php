@@ -75,16 +75,20 @@ class PostController extends Controller
             'Authorization' => 'Bearer ' . session('token')[0],
         ];
 
-        $id = $request->id;
-
         try {
-            $client = new \GuzzleHttp\Client(['base_uri' => 'http://backend.dev.com/']);
-            $response = $client->request('DELETE', "api/posts/$id", [
-                'headers' => $headers,
-            ]);
-            $content = $response->getBody()->getContents();
-            $contentArray = json_decode($content, true);
-            $data = $contentArray;
+            $ids = explode(',', $request->input('ids'));
+            
+            // dd($ids);
+            foreach ($ids as $id) {
+                # code...
+                $client = new \GuzzleHttp\Client(['base_uri' => 'http://backend.dev.com/']);
+                $response = $client->request('DELETE', "api/posts/$id", [
+                    'headers' => $headers,
+                ]);
+                $content = $response->getBody()->getContents();
+                $contentArray = json_decode($content, true);
+                $data = $contentArray;
+            }
             if ($response->getStatusCode() == 200) {
                 return redirect()
                     ->back()

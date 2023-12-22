@@ -77,7 +77,13 @@
                                             </td>
 
                                             <td style="text-align: center">
-                                                {{ $val['writer']['username'] }}
+                                                <a href="#">
+                                                    <img alt="image" src="{{ asset('assets/img/avatar/avatar-5.png') }}"
+                                                        class="rounded-circle" width="35" data-toggle="title"
+                                                        title="">
+                                                    <div class="d-inline-block ml-1">{{ $val['writer']['username'] }}</div>
+                                                </a>
+
                                             </td>
 
                                             <td style="text-align: center">
@@ -93,7 +99,6 @@
 
                                                     <input type="hidden" name="id" value="{{ $val['id'] }}"
                                                         required autofocus>
-                                                    <!-- Other form fields/buttons if needed -->
                                                     <button class="btn btn-danger"><i class="fas fa-trash"
                                                             id="swal-6"></i></button>
 
@@ -104,7 +109,8 @@
                                             <td style="text-align: center">
                                                 <div class="custom-checkbox custom-control">
                                                     <input type="checkbox" data-checkboxes="mygroup"
-                                                        class="custom-control-input" id="checkbox-{{ $val['id'] }}">
+                                                        class="custom-control-input checkbox-delete"
+                                                        id="checkbox-{{ $val['id'] }}" value="{{ $val['id'] }}">
                                                     <label for="checkbox-{{ $val['id'] }}"
                                                         class="custom-control-label">&nbsp;</label>
                                                 </div>
@@ -113,6 +119,13 @@
                                     @endforeach
                                 </tbody>
                             </table>
+                            <form id="delete-form" action="{{ route('destroy') }}" method="POST">
+                                @csrf
+                                <div class="float-right">
+                                    <button id="delete-selected-btn" class="btn btn-danger" style="display: none;"
+                                        type="submit"><i class="fas fa-trash"></i>Delete Selected</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -121,6 +134,51 @@
     </div>
 @endsection
 @push('scripts')
+    <script>
+        $(document).ready(function() {
+            // Function to toggle "Delete Selected" button visibility
+            function toggleDeleteButton() {
+                if ($('.checkbox-delete:checked').length > 0) {
+                    $('#delete-selected-btn').show();
+                } else {
+                    $('#delete-selected-btn').hide();
+                }
+            }
+
+            // Event delegation for handling checkbox changes
+            $('#table-1').on('change', '.checkbox-delete', function() {
+                toggleDeleteButton();
+            });
+
+            // Initial setup for checkboxes and button visibility
+            toggleDeleteButton();
+
+            $('#delete-form').on('submit', function(e) {
+                e.preventDefault();
+
+                var selectedIds = [];
+                $('.checkbox-delete:checked').each(function() {
+                    selectedIds.push($(this).val()); // Extracting post IDs
+                });
+
+                if (selectedIds.length > 0) {
+                    // Set the array of IDs in a hidden input before submitting the form
+                    $('<input>').attr({
+                        type: 'hidden',
+                        name: 'ids',
+                        value: selectedIds.join(',')
+                    }).appendTo('#delete-form');
+
+                    // Submit the form for multiple deletion
+                    $(this)[0].submit();
+                } else {
+                    alert('Please select at least one item to delete.');
+                }
+            });
+        });
+    </script>
+
+
     <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap4.min.js"></script>
     <script src="https://cdn.datatables.net/select/1.7.0/js/dataTables.select.min.js"></script>
