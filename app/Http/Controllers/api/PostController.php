@@ -11,21 +11,17 @@ class PostController extends Controller
 {
     public function index()
     {
-        $headers = [
-            'Authorization' => 'Bearer ' . session('token')[0],
-        ];
-
         $client = new \GuzzleHttp\Client(['base_uri' => 'http://backend.dev.com/']);
         $response = $client->request('GET', 'api/post');
         $content = $response->getBody()->getContents();
         $contentArray = json_decode($content, true); // Merubah data menjadi bentuk array
         $data = $contentArray['data'];
-        return view('post.index', ['data' => $data]);
-        // foreach ($data as $element) {
-        // $id[] = $element['title'];
-        // // $i = $data['id'];
-        // }
-        // dd($id);
+
+        if (session()->has('token')) {
+            # code...
+            return view('post.index', ['data' => $data]);
+        }
+        return redirect('landing');
     }
 
     public function store(Request $request)
@@ -45,16 +41,22 @@ class PostController extends Controller
                 ],
             ]);
             if ($response->getStatusCode() == 200) {
-                dd('failed!');
+                return redirect()
+                    ->back()
+                    ->with('error', 'Something is wrong :(');
             } else {
-                dd('success');
+                return redirect()
+                    ->back()
+                    ->with('success', 'Post created successfully !');
             }
         } catch (\GuzzleHttp\Exception\RequestException $e) {
             //throw $th;
             $response = $e->getResponse();
             $responseBodyAsString = $response->getBody()->getContents();
             $data = json_decode($responseBodyAsString, true);
-            dd($data);
+            return redirect()
+                ->back()
+                ->with('error', $data['message']);
         }
 
         // $content = $response->getBody()->getContents();
@@ -66,7 +68,11 @@ class PostController extends Controller
 
     public function indexCreate()
     {
-        return view('post.create-post');
+        if (session()->has('token')) {
+            # code...
+            return view('post.create-post');
+        }
+        return redirect('login');
     }
 
     public function destroy(Request $request)
@@ -77,7 +83,7 @@ class PostController extends Controller
 
         try {
             $ids = explode(',', $request->input('ids'));
-            
+
             // dd($ids);
             foreach ($ids as $id) {
                 # code...

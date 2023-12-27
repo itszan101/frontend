@@ -18,7 +18,7 @@
             </div>
             <div class="section-header-breadcrumb">
                 <div class="breadcrumb-item active"><a href="{{ route('dashboard') }}">Dashboard</a></div>
-                <div class="breadcrumb-item"><a href={{ route('client') }}>Halaman Post</a></div>
+                <div class="breadcrumb-item"><a href={{ route('post') }}>Halaman Post</a></div>
                 <div class="breadcrumb-item">List CLient</div>
             </div>
         </div>
@@ -51,6 +51,7 @@
                                     {{ session('success') }}
                                 </div>
                             @endif
+
                             <table class="table table-striped" id="table-1">
                                 <thead>
                                     <tr>

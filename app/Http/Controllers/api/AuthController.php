@@ -31,10 +31,10 @@ class AuthController extends Controller
         ]);
         // dd(json_decode($response->getBody()->getContents(), true));
         session(['token' => json_decode($response->getBody()->getContents(), true)]);
-        if ($response->getStatusCode() == 200) {
+        if (session()->has('token')) {
             return redirect('dashboard');
         } else {
-            return false;
+            return redirect()->back()->with('error', 'email / password not match !');
         }
     }
 
@@ -57,5 +57,21 @@ class AuthController extends Controller
         $request->session()->forget('token'); // Redirect to a route for frontend cleanup
         return redirect(route('login'));
         // dd(json_decode($response->getBody()->getContents(), true));
+    }
+
+    public function getMe()
+    {
+        $headers = [
+            'Authorization' => 'Bearer ' . session('token')[0],
+        ];
+
+        $client = new \GuzzleHttp\Client(['base_uri' => 'http://backend.dev.com/']);
+        $response = $client->request('GET', 'api/getme', [
+            'headers' => $headers,
+        ]);
+        $content = $response->getBody()->getContents();
+        $contentArray = json_decode($content, true); // Merubah data menjadi bentuk array
+        $data = $contentArray;
+        return view('auth.profile', ['data' => $data]);
     }
 }

@@ -39,16 +39,6 @@
                         <div class="card-body">
                             <form method="POST" action="{{ route('store') }}" class="needs-validation">
                                 @csrf
-
-                                @if ($errors->any())
-                                    <div class="alert alert-danger">
-                                        <ul>
-                                            @foreach ($errors->all() as $error)
-                                                <li>{{ $error }}</li>
-                                            @endforeach
-                                        </ul>
-                                    </div>
-                                @endif
                                 @if (session('error'))
                                     <div class="alert alert-danger">
                                         {{ session('error') }}
@@ -60,10 +50,7 @@
                                         {{ session('success') }}
                                     </div>
                                 @endif
-
-
                                 <!-- Rest of your form -->
-
 
                                 <div class="form-group row mb-4">
                                     <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Title</label>

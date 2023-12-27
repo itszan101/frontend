@@ -13,17 +13,17 @@
         //     'is_multi' => false,
         //     'section_icon' => 'fas fa-layer-group',
         // ],
-        [
-            'href' => [
-                [
-                    'section_text' => 'Domain AWH',
-                    'section_list' => [['href' => 'client', 'text' => 'List Client'], ['href' => 'AddClient', 'text' => 'Tambah Client']],
-                    'section_icon' => 'fas fa-user',
-                ],
-            ],
-            'text' => 'Domain',
-            'is_multi' => true,
-        ],
+        // [
+        //     'href' => [
+        //         [
+        //             'section_text' => 'Domain AWH',
+        //             'section_list' => [['href' => 'client', 'text' => 'List Client'], ['href' => 'AddClient', 'text' => 'Tambah Client']],
+        //             'section_icon' => 'fas fa-user',
+        //         ],
+        //     ],
+        //     'text' => 'Domain',
+        //     'is_multi' => true,
+        // ],
         [
             'href' => [
                 [

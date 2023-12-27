@@ -6,6 +6,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\api\AuthController;
 use App\Http\Controllers\api\PostController;
 use App\Http\Controllers\DashboardController;
+use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,19 +23,17 @@ Route::get('/createpost', [PostController::class, 'indexCreate'])->name('createP
 Route::get('/post', [PostController::class, 'index'])->name('post');
 Route::post('/destroy', [PostController::class, 'destroy'])->name('destroy');
 
+Route::get('/add-client', [AdminController::class, 'addClient'])->name('AddClient');
+Route::get('/client', [AdminController::class, 'index'])->name('client');
+
 Route::get('/', function () {
-    return view('auth.login');
+    return redirect('login');
 });
+// Route::get('/', [DashboardController::class, 'landingPage'])->name('landingPage');
+
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/loginApi', [AuthController::class, 'login'])->name('loginApi');
-Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
-
-Route::middleware(['guest'])->group(function () {
-    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/add-client', [AdminController::class, 'addClient'])->name('AddClient');
-    Route::get('/client', [AdminController::class, 'index'])->name('client');
-});
-
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 Route::get('/token', [AuthController::class, 'showToken'])->name('token');
-
-
+Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::get('/profile', [AuthController::class, 'getMe'])->name('profile');
