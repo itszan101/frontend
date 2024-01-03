@@ -1,6 +1,6 @@
 @php
     $headers = [
-        'Authorization' => 'Bearer ' . session('token')[0],
+        'Authorization' => 'Bearer ' . session('token')['token'],
     ];
 
     $client = new \GuzzleHttp\Client(['base_uri' => 'http://backend.dev.com/']);

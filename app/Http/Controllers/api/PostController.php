@@ -21,13 +21,13 @@ class PostController extends Controller
             # code...
             return view('post.index', ['data' => $data]);
         }
-        return redirect('landing');
+        return redirect('profile');
     }
 
     public function store(Request $request)
     {
         $headers = [
-            'Authorization' => 'Bearer ' . session('token')[0],
+            'Authorization' => 'Bearer ' . session('token')['token'],
         ];
 
         try {
@@ -78,7 +78,7 @@ class PostController extends Controller
     public function destroy(Request $request)
     {
         $headers = [
-            'Authorization' => 'Bearer ' . session('token')[0],
+            'Authorization' => 'Bearer ' . session('token')['token'],
         ];
 
         try {

@@ -36,4 +36,5 @@ Route::post('/loginApi', [AuthController::class, 'login'])->name('loginApi');
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 Route::get('/token', [AuthController::class, 'showToken'])->name('token');
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
-Route::get('/profile', [AuthController::class, 'getMe'])->name('profile');
+Route::get('/profile', [AuthController::class, 'IndexgetMe'])->name('profile');
+Route::post('/profile-update', [AuthController::class, 'updateProfile'])->name('updateProfile');

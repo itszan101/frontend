@@ -24,11 +24,10 @@
             <form method="POST" action="{{ route('loginApi') }}" class="needs-validation">
                 @csrf
                 <div class="form-group">
-                    <label for="email">Email</label>
-                    <input id="email" type="email" class="form-control" name="email" tabindex="1" required
-                        autofocus>
+                    <label for="identifier">Email or Username</label>
+                    <input id="identifier" type="text" class="form-control" name="identifier" tabindex="1" required autofocus>
                     <div class="invalid-feedback">
-                        Please fill in your email
+                        Please fill in your email or username
                     </div>
                 </div>
 
