@@ -31,10 +31,13 @@ Route::get('/', function () {
 });
 // Route::get('/', [DashboardController::class, 'landingPage'])->name('landingPage');
 
+Route::get('/register', [AuthController::class, 'showRegisForm'])->name('register');
+Route::post('/registerApi', [AuthController::class, 'register'])->name('registerApi');
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/loginApi', [AuthController::class, 'login'])->name('loginApi');
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 Route::get('/token', [AuthController::class, 'showToken'])->name('token');
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
-Route::get('/profile', [AuthController::class, 'IndexgetMe'])->name('profile');
+Route::get('/profile', [AuthController::class, 'profile'])->name('profile');
 Route::post('/profile-update', [AuthController::class, 'updateProfile'])->name('updateProfile');
+Route::post('/c-pass', [AuthController::class, 'changePassword'])->name('cpass');

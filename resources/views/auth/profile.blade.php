@@ -87,34 +87,41 @@
                 </div>
                 <div class="col-12 col-md-6 col-lg-6">
                     <div class="card">
-                        <form>
-                            <div class="card-header">
-                                <h4>Change Password</h4>
-                            </div>
-                            <div class="card-body">
+                        <div class="card-header">
+                            <h4>Change Password</h4>
+                        </div>
+                        <div class="card-body">
+                            <form method="POST" action="{{ route('cpass') }}" class="needs-validation">
+                                @if (session('error2'))
+                                    <div class="alert alert-danger">
+                                        {{ session('error2') }}
+                                    </div>
+                                @endif
+
+                                @if (session('success2'))
+                                    <div class="alert alert-success">
+                                        {{ session('success2') }}
+                                    </div>
+                                @endif
+                                @csrf
                                 <div class="form-group">
                                     <label>New Password</label>
-                                    <input type="password" class="form-control is-valid" value="Rizal Fakhri" required="">
-                                    <div class="valid-feedback">
-                                        Good job!
-                                    </div>
+                                    <input type="password" class="form-control" value="password" name="password"
+                                        required="">
                                 </div>
                                 <div class="form-group">
                                     <label>Confirm Password</label>
-                                    <input type="password" class="form-control is-invalid" required=""
-                                        value="rizal@fakhri">
-                                    <div class="invalid-feedback">
-                                        Oh no! Password not match.
-                                    </div>
+                                    <input type="password" class="form-control" value="Password"
+                                        name="password_confirmation" required="">
                                 </div>
-                            <div class="card-footer text-right">
-                                <button class="btn btn-primary">Change Password</button>
-                            </div>
-                        </form>
+                                <div class="card-footer text-right">
+                                    <button type="submit" class="btn btn-primary">Change Password</button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
         </div>
     </section>
 

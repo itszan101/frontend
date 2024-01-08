@@ -21,7 +21,7 @@ class PostController extends Controller
             # code...
             return view('post.index', ['data' => $data]);
         }
-        return redirect('profile');
+        return redirect('login');
     }
 
     public function store(Request $request)

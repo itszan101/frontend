@@ -9,6 +9,56 @@ use Illuminate\Support\Facades\Http;
 
 class AuthController extends Controller
 {
+    public function showRegisForm()
+    {
+        if (!session()->has('token')) {
+            return view('auth.register');
+        }
+        return redirect(route('dashboard')); // Redirect to a different route after login
+    }
+
+    public function register(Request $request)
+    {
+        $client = new \GuzzleHttp\Client(['base_uri' => 'http://backend.dev.com/']);
+
+        try {
+            //code...
+            $response = $client->post('api/register', [
+                'form_params' => [
+                    'firstname' => $request->firstname,
+                    'lastname' => $request->lastname,
+                    'username' => $request->username,
+                    'email' => $request->email,
+                    'password' => $request->password,
+                    'password_confirmation' => $request->password_confirmation,
+                ],
+            ]);
+            $responseData = json_decode($response->getBody(), true);
+            //  dd($responseData);
+            if ($response->getStatusCode() === 200 && isset($responseData['message'])) {
+                // dd($response['message']);
+                return redirect(route('login'))
+                    ->with('success', $responseData['message']);
+            } else {
+                $errorMessage = 'Something went wrong while registering.';
+                if (isset($responseData['message'])) {
+                    $errorMessage = $responseData['message'];
+                } elseif (isset($responseData['errors']) && isset($responseData['errors']['email'])) {
+                    $errorMessage = $responseData['errors']['email'][0];
+                }
+
+                return redirect()
+                    ->back()
+                    ->with('error', $errorMessage);
+            }
+        } catch (\GuzzleHttp\Exception\RequestException $e) {
+            return redirect()
+                ->back()
+                ->with('error', 'Failed to register user.');
+        }
+    }
+    
+
     public function showLoginForm()
     {
         if (session()->has('token')) {
@@ -69,10 +119,18 @@ class AuthController extends Controller
         // dd(json_decode($response->getBody()->getContents(), true));
     }
 
-    public function IndexgetMe()
+    public function profile()
     {
+        $token = session('token');
+        $tokenValue = isset($token['token']) ? $token['token'] : null;
+
+        if (!$tokenValue) {
+            // Redirect to the login page or handle the situation accordingly
+            return redirect()->route('login');
+        }
+
         $headers = [
-            'Authorization' => 'Bearer ' . session('token')['token'],
+            'Authorization' => 'Bearer ' . $tokenValue,
         ];
 
         $client = new \GuzzleHttp\Client(['base_uri' => 'http://backend.dev.com/']);
@@ -129,36 +187,56 @@ class AuthController extends Controller
                 // Handle a general error message here if needed
                 $errorMessage = 'Validation error occurred.';
             }
-        
+
             return redirect()
                 ->back()
                 ->with('error', $errorMessage);
         }
+    }
+    public function changePassword(Request $request)
+    {
+        $headers = [
+            'Authorization' => 'Bearer ' . session('token')['token'],
+        ];
 
-        // if (isset($contentArray['errors'])) {
-        //     // Handle validation errors here
-        //     $errors = $contentArray['errors'];
-        //     // Implement logic to display or handle these errors
-        //     // For example, you could log them or show them to the user
-        //     dd($errors);
-        // } else {
-        //     // No errors, proceed with the rest of your logic
-        //     $data = $contentArray;
-        //     dd($data);
-        // }
+        $client = new \GuzzleHttp\Client(['base_uri' => 'http://backend.dev.com/']);
 
-        // 'username' => $request->username,
-        //         'email' => $request->email,
-        //         'firstname' => $request->firstname,
-        //         'lastname' => $request->lastname,
-        // if ($response->getStatusCode() === 200) {
-        //     return redirect()
-        //         ->back()
-        //         ->with('success', 'Profile Updated Successfully');
-        // } else {
-        //     return redirect()
-        //         ->back()
-        //         ->with('error', 'Something went wrong while updating the profile.');
-        // }
+        try {
+            //code...
+            $response = $client->request('PUT', 'api/c-pass/2', [
+                'headers' => $headers,
+                'json' => [
+                    'password' => $request->password,
+                    'password_confirmation' => $request->password_confirmation,
+                ],
+            ]);
+            if ($response->getStatusCode() === 200) {
+                return redirect()
+                    ->back()
+                    ->with('success2', 'Password Changed Successfully');
+            } else {
+                return redirect()
+                    ->back()
+                    ->with('error', 'Something went wrong while updating the profile.');
+            }
+        } catch (\GuzzleHttp\Exception\RequestException $e) {
+            $response = $e->getResponse();
+            $responseBodyAsString = $response->getBody()->getContents();
+            $data = json_decode($responseBodyAsString, true);
+            // dd($data['errors']);
+
+            $errorMessage = '';
+
+            if (isset($data['errors']['password'][0])) {
+                $errorMessage = $data['errors']['password'][0];
+            } else {
+                // Handle a general error message here if needed
+                $errorMessage = 'Validation error occurred.';
+            }
+
+            return redirect()
+                ->back()
+                ->with('error2', $errorMessage);
+        }
     }
 }

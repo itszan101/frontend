@@ -15,6 +15,11 @@
 
         <div class="card-body">
             
+            @if (session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
             @if (session('error'))
                 <div class="alert alert-danger">
                     {{ session('error') }}
@@ -63,7 +68,7 @@
         </div>
     </div>
     <div class="text-muted mt-5 text-center">
-        Don't have an account? <a href="auth-register.html">Create One</a>
+        Don't have an account? <a href="{{ route("register") }}">Create One</a>
     </div>
 @endsection
 
