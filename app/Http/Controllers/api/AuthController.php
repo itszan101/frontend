@@ -37,8 +37,7 @@ class AuthController extends Controller
             //  dd($responseData);
             if ($response->getStatusCode() === 200 && isset($responseData['message'])) {
                 // dd($response['message']);
-                return redirect(route('login'))
-                    ->with('success', $responseData['message']);
+                return redirect(route('login'))->with('success', $responseData['message']);
             } else {
                 $errorMessage = 'Something went wrong while registering.';
                 if (isset($responseData['message'])) {
@@ -57,7 +56,6 @@ class AuthController extends Controller
                 ->with('error', 'Failed to register user.');
         }
     }
-    
 
     public function showLoginForm()
     {
@@ -149,11 +147,19 @@ class AuthController extends Controller
             'Authorization' => 'Bearer ' . session('token')['token'],
         ];
 
+        $get_client = new \GuzzleHttp\Client(['base_uri' => 'http://backend.dev.com/']);
+        $response = $get_client->request('GET', 'api/getme', [
+            'headers' => $headers,
+        ]);
+        $content = $response->getBody()->getContents();
+        $contentArray = json_decode($content, true); // Merubah data menjadi bentuk array
+        $id = $contentArray['id'];
+
         $client = new \GuzzleHttp\Client(['base_uri' => 'http://backend.dev.com/']);
 
         try {
             //code...
-            $response = $client->request('PUT', 'api/profile/2', [
+            $response = $client->request('PUT', "api/profile/$id", [
                 'headers' => $headers,
                 'json' => [
                     'username' => $request->username,
@@ -175,7 +181,7 @@ class AuthController extends Controller
             $response = $e->getResponse();
             $responseBodyAsString = $response->getBody()->getContents();
             $data = json_decode($responseBodyAsString, true);
-            // dd($data['errors']['email'][0]);
+            dd($data['errors']['email'][0]);
 
             $errorMessage = '';
 
@@ -199,11 +205,19 @@ class AuthController extends Controller
             'Authorization' => 'Bearer ' . session('token')['token'],
         ];
 
+        $get_client = new \GuzzleHttp\Client(['base_uri' => 'http://backend.dev.com/']);
+        $response = $get_client->request('GET', 'api/getme', [
+            'headers' => $headers,
+        ]);
+        $content = $response->getBody()->getContents();
+        $contentArray = json_decode($content, true); // Merubah data menjadi bentuk array
+        $id = $contentArray['id'];
+
         $client = new \GuzzleHttp\Client(['base_uri' => 'http://backend.dev.com/']);
 
         try {
             //code...
-            $response = $client->request('PUT', 'api/c-pass/2', [
+            $response = $client->request('PATCH', "api/c-pass/$id", [
                 'headers' => $headers,
                 'json' => [
                     'password' => $request->password,
@@ -231,7 +245,7 @@ class AuthController extends Controller
                 $errorMessage = $data['errors']['password'][0];
             } else {
                 // Handle a general error message here if needed
-                $errorMessage = 'Validation error occurred.';
+                $errorMessage = $data['error'];
             }
 
             return redirect()

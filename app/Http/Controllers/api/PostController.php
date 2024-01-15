@@ -112,7 +112,10 @@ class PostController extends Controller
         }
     }
 
-    public function edit()
+    public function IndexEdit()
     {
+        $headers = [
+            'Authorization' => 'Bearer ' . session('token')['token'],
+        ];
     }
 }
